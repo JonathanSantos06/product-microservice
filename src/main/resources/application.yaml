@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: spring-mongo-demo
+  mongodb:
+    uri: ${MONGODB_URI}
+
+server:
+  port: 8080

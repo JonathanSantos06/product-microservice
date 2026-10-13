@@ -2,8 +2,10 @@
 package com.example.product_microservice.controller;
 
 import com.example.product_microservice.entity.ProductEntity;
-import com.example.product_microservice.repository.ProductRepository;
+import com.example.product_microservice.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,22 +14,49 @@ import java.util.List;
 @RequestMapping("/api/v1/products")
 public class ProductController {
 
-    private final ProductRepository productRepository;
+    private final ProductService productService;
 
-    public ProductController(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    public ProductController(ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<ProductEntity> getAllProducts() {
-        return productRepository.findAll();
+    public ResponseEntity<List<ProductEntity>> getAllProducts() {
+        return ResponseEntity.ok(productService.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductEntity> getProductById(
+            @PathVariable String id) {
+
+        return ResponseEntity.ok(productService.findById(id));
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ProductEntity createProduct(@RequestBody ProductEntity productEntity) {
-        return productRepository.save(productEntity);
+    public ResponseEntity<ProductEntity> createProduct(
+            @Valid @RequestBody ProductEntity product) {
+
+        ProductEntity created = productService.create(product);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(created);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductEntity> updateProduct(
+            @PathVariable String id,
+            @Valid @RequestBody ProductEntity product) {
+
+        return ResponseEntity.ok(productService.update(id, product));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(
+            @PathVariable String id) {
+
+        productService.delete(id);
+
+        return ResponseEntity.noContent().build();
+    }
 }

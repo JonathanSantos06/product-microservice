@@ -32,3 +32,22 @@ build/
 ### VS Code ###
 .vscode/
 .env
+
+
+# Credenciales y configuración local
+.env
+.env.*
+!.env.example
+
+# Archivos de configuración local
+application-local.yml
+application-local.yaml
+application-local.properties
+
+# Archivos generados por Maven
+target/
+
+# Configuración del IDE
+.idea/
+.vscode/
+*.iml
